@@ -7,7 +7,7 @@ export default function handler(req, res) {
   const validates = getApiValidates("name 2 150, email 2 100, password 6 500");
   universalHandler("POST", false, { req, res }, validates, async () => {
     let user = await User.findOne({ email: req.body.email });
-    if (user) return res.status(400).send(getResData(false, "Email already used!"));
+    if (user) return res.status(400).send(getResData(false, "Email already used!", { message: "email is already used", field: "email" }));
 
     let data = getObjKeys(req.body, "name email password");
     data.password = await bcrypt.hash(data.password, 12);

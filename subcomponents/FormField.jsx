@@ -31,7 +31,7 @@ export default function FormField(props) {
             />
             <button
               onClick={() => setShowPwd(prev => !prev)}
-              className='absolute top-[1.5px] right-[1px] text-[23px] h-[94%] px-3 bg-white rounded-tr-[6px] rounded-br-[6px]'
+              className='absolute top-[2px] right-[1px] text-[23px] h-[92%] px-3 bg-white rounded-tr-[6px] rounded-br-[6px]'
             >
               {showPwd ? <AiFillEyeInvisible /> : <AiFillEye />}
             </button>

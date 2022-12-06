@@ -76,3 +76,41 @@ body {
   }
 }
 
+.splide-slider, .splide, .splide__track, .splide__list {
+  height: 100%;
+}
+
+.splide__pagination__page {
+  background-color: #ccc !important;
+}
+
+/* LINE CLAMP  */
+.line-clamp-1, .line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.line-clamp-1 {
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-3 {
+  -webkit-line-clamp: 3;
+}
+
+.jodit-status-bar__item-right {
+  display: none !important;
+}
+
+.jodit-react-container, .rti--container {
+  border: 2px solid #6d28d9 !important;
+  border-radius: 6px !important;
+}
+
+.rti--container {
+  font-weight: 700;
+  padding: 8px 16px !important;
+}
+
+

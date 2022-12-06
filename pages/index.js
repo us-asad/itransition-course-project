@@ -1,13 +1,18 @@
 import { SEO } from "components";
-import Head from "next/head";
+import { Reviews } from "containers";
+import { reviews } from "data";
 
 export default function Home() {
   return (
-    <div>
+    <div className="custom-container pb-10">
       <SEO />
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+      <div>
+        <h2 className="text-[30px] font-bold">Top LetRevs</h2>
+        <Reviews
+          reviews={reviews}
+        />
+      </div>
+      <div className="h-[200vh]" />
     </div>
   )
 }

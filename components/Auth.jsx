@@ -1,18 +1,41 @@
+import axios from 'axios';
+import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { changeUser } from 'redux/slices/user';
 import FormField from 'subcomponents/FormField';
 import SubmitBtn from 'subcomponents/SubmitBtn';
 import { getInputValidations } from 'utils/functions';
 
-export default function Auth({ defaultShowLogin }) {
+export default function Auth({ defaultShowLogin, onAuthDone }) {
   const [showLogin, setShowLogin] = useState(defaultShowLogin);
-  const { handleSubmit, register, formState: { errors } } = useForm();
+  const { handleSubmit, register, formState: { errors }, setError } = useForm();
   const emailRegisters = register("email", getInputValidations(true, 2, 100));
   const passwordRegisters = register("password", getInputValidations(true, 6, 150));
+  const [authLoading, setAuthLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  const authUser = data => {
-    console.log(data);
+  const authUser = async data => {
+    setAuthLoading(true);
+
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/auth/${showLogin ? "login" : "register"}`, data);
+
+      if (res.data?.ok) {
+        setCookie("token", res.data?.data?.token);
+        dispatch(changeUser(res.data?.data?.user));
+        onAuthDone()
+      }
+    } catch (ex) {
+      const errData = ex?.response?.data?.data;
+      if (errData) {
+        setError(errData.field, { message: errData.message })
+      } else console.error(ex.response?.data?.data);
+    }
+
+    setAuthLoading(false)
   }
 
   useEffect(() => {
@@ -81,18 +104,21 @@ export default function Auth({ defaultShowLogin }) {
           </>
         )}
         <SubmitBtn
+          loading={authLoading}
           text={showLogin ? "Login" : "Register"}
-          loadingText={showLogin ? "Loging in" : "Registering"}
+          loadingText={showLogin ? "Logging in" : "Registering"}
           className="mt-2"
         />
         <div className='relative text-center'>
           <span className='absolute block w-full h-0.5 top-1/2 -translate-y-1/2 left-0 bg-gray-300' />
-          <span className='relative bg-white'>or with</span>
+          <span className='relative bg-white px-2'>or with</span>
         </div>
         <div className='flex gap-2'>
           <button
+            disabled={authLoading}
             type="button"
             className={getSocialBtnClassName()}
+          // onClick={signIn("google")}
           >
             Google
             <Image
@@ -103,6 +129,7 @@ export default function Auth({ defaultShowLogin }) {
             />
           </button>
           <button
+            disabled={authLoading}
             type="button"
             className={getSocialBtnClassName(true)}
           >
@@ -121,4 +148,4 @@ export default function Auth({ defaultShowLogin }) {
 }
 
 const tabClassName = `w-1/2 py-2 text-[18px] font-bold`
-const getSocialBtnClassName = blueBg => `styled-btn w-1/2 py-2 text-[18px] font-bold flex items-center justify-center gap-3 border-2 rounded-full ${blueBg ? "bg-blue-600 text-white border-blue-600" : "bg-white border-gray-200"}`;
+const getSocialBtnClassName = blueBg => `styled-btn w-1/2 py-2 text-[18px] font-bold flex items-center justify-center gap-3 border-2 rounded-full disabled:opacity-60 disabled:hover:scale-100 disabled:cursor-not-allowed ${blueBg ? "bg-blue-600 text-white border-blue-600" : "bg-white border-gray-200"}`;

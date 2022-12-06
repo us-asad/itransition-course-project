@@ -1,4 +1,5 @@
 import db from "./db";
+import jwt from "jsonwebtoken";
 
 export const getInputValidations = (required, minLength, maxLength) => {
   const validations = {};
@@ -27,6 +28,7 @@ export const universalHandler = async (method, checkToken, { req, res }, validat
       tokenData = jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SIGN);
       if (!tokenData) return res.status(403).send(getResData(false, "Access denied"));
     } catch (ex) {
+      console.log(ex);
       return res.status(403).send(getResData(false, "Access denied"));
     }
   }
@@ -68,4 +70,10 @@ export const getObjKeys = (data, keysStr) => {
   keys.forEach(key => newData[key] = data[key]);
   return newData
 }
+
+export const setAuthHeader = token => ({
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})
 

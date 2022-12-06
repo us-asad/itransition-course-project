@@ -15,7 +15,7 @@ export default function SubmitBtn({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`styled-btn py-2 text-[18px] font-bold rounded-lg bg-violet-700 text-white ${className}`}
+      className={`styled-btn flex justify-center items-center gap-3 py-2 text-[18px] font-bold rounded-lg bg-violet-700 text-white ${className} disabled:opacity-60 disabled:hover:scale-100 disabled:cursor-not-allowed`}
     >
       {loading ? (
         <>
